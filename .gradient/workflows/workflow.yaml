@@ -1,0 +1,30 @@
+'on':
+  github:
+    branches:
+      only: main
+jobs:
+    CloneRepo:
+        uses: git-checkout@v1
+        with:
+            url: https://github.com/andreihirvi/paper-rl-trading-bot.git
+        outputs:
+            repo:
+                type: volume
+        resources:
+            instance-type: C5
+    TrainModel:
+        uses: script@v1
+        with:
+            image: tensorflow/tensorflow:2.6.0-gpu-py3
+            script: |-
+                pip3 install -r requirements.txt
+                python3 train.py data/FB_01.01.2015-30.06.2021.csv data/FB_01.07.2021-15.02.2022.csv --strategy double-dqn
+        needs:
+            - CloneRepo
+        inputs:
+            repo: CloneRepo.outputs.repo
+        outputs:
+            save:
+                type: volume
+        resources:
+            instance-type: C5
