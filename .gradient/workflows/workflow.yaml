@@ -6,7 +6,8 @@ jobs:
     CloneRepo:
         uses: git-checkout@v1
         with:
-            url: https://github.com/andreihirvi/paper-rl-trading-bot.git
+            ref: context.event.github.ref
+            url: context.event.github.url
         outputs:
             repo:
                 type: volume
